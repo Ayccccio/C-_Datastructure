@@ -1,11 +1,7 @@
 #pragma once
 #include "vector.hpp"
 
-int main() {
-	Person p;
-	Person p1(p);
-	Person p2(p1);
-	Person p3(p2);
+void vectorTest() {
 	Vector<Person>* v = new Vector<Person>[10];
 
 	v->push_back(p);
@@ -26,4 +22,13 @@ int main() {
 	v->show() << endl;
 
 	delete[] v;
+}
+
+Person p;
+Person p1(p);
+Person p2(p1);
+Person p3(p2);
+int main() {
+	
+	
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <windows.h>
 #include <iostream>
-#include "Person.h"
 using namespace std;
 
 #define SUCCESS 1
