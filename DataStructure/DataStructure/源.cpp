@@ -1,5 +1,12 @@
 #pragma once
 #include "vector.hpp"
+#include "Link.hpp"
+#include "Person.h"
+
+Person p;
+Person p1(p);
+Person p2(p1);
+Person p3(p2);
 
 void vectorTest() {
 	Vector<Person>* v = new Vector<Person>[10];
@@ -24,11 +31,17 @@ void vectorTest() {
 	delete[] v;
 }
 
-Person p;
-Person p1(p);
-Person p2(p1);
-Person p3(p2);
+void linkTest() {
+	Link<Person>* link = new Link<Person>;
+	link->insert(p);
+	link->insert(p1);
+	link->insert(p2);
+	link->insert(p3);
+	link->show() << endl;
+
+	delete link;
+}
 int main() {
 	
-	
+	linkTest();
 }

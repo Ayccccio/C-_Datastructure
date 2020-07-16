@@ -19,9 +19,17 @@ public:
 		age = p.age;
 		sex = p.sex;
 	}
+	BOOL operator==(Person& p) {
+		if (id == p.id && age == p.age && sex == p.sex)
+		{
+			return TRUE;
+		}
+		return FALSE;
+	}
 };
 
 ostream& operator<<(ostream& cout, Person& p) {
 	cout << "[Person:id=" << p.id << ",sex=" << p.sex << ",age=" << p.age << "]";
 	return cout;
 }
+
