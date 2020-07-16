@@ -1,4 +1,5 @@
 #pragma once
+#include "const.h"
 
 template <class T>
 class TreeNode {

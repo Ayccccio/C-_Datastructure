@@ -126,6 +126,7 @@
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="const.h" />
     <ClInclude Include="Link.hpp" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Tree.hpp" />

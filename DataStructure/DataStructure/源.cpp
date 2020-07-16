@@ -39,6 +39,24 @@ void linkTest() {
 	link->insert(p3);
 	link->show() << endl;
 
+	link->erase(0);
+	link->erase(5);
+	link->show() << endl;
+
+	cout << link->empty() << endl;
+
+	cout << *link->getElement(0) << endl;
+	cout << *link->getElement(1) << endl;
+	cout << *link->getElement(2) << endl;
+	cout << link->getElement(3) << endl;
+
+	cout << link->getElementIndex(p2) << endl;
+
+	cout << link->size() << endl;
+
+	link->clear();
+	link->show() << endl;
+
 	delete link;
 }
 int main() {

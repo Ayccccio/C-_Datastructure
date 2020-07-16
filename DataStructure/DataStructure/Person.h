@@ -7,7 +7,7 @@ class Person
 public:
 	int id;
 	int age;
-	char sex;
+	bool sex;
 public:
 	Person() {
 		age = 18;

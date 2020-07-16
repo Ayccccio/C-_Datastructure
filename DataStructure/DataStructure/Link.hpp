@@ -1,12 +1,8 @@
 #pragma once
 #include <windows.h>
 #include <iostream>
+#include "const.h"
 using namespace std;
-
-#define SUCCESS 1
-#define ERROR -1
-#define MALLOC_ERROR -2
-#define INDEX_ERROR -3
 
 template <class T>
 struct Node {
@@ -56,7 +52,7 @@ public:
 public:
 	BOOL empty();				//判断链表有效节点是否为空
 	void clear();				//清除所有节点
-	T& getElement(DWORD index);	//通过索引获取元素
+	T* getElement(DWORD index);	//通过索引获取元素
 	DWORD getElementIndex(T& t);//通过元素获取索引
 	DWORD insert(T& t);			//在链表头部插入元素
 	DWORD insert(DWORD index, T& t);	//在指定索引位置插入元素
@@ -109,37 +105,47 @@ inline BOOL Link<T>::empty()
 template<class T>
 inline void Link<T>::clear()
 {
-	Node<T>* tempNode = m_node->nextAddr;
-	while (tempNode != m_node)				//循环遍历节点
+	if (m_dwSize)
 	{
-		tempNode = tempNode->nextAddr;		//先指向下一个
-		delete tempNode->prevAddr;			//在释放上一个
+		Node<T>* tempNode;
+		do
+		{
+			tempNode = m_node->prevAddr;
+			delete tempNode;
+			if (*(DWORD*)m_node->nextAddr == 0xdddddddd) {
+				delete m_node;
+				break;
+			}
+			else {
+				m_node = m_node->nextAddr;
+			}
+		} while (tempNode);
+		m_dwSize = 0;
 	}
-	delete m_node;			//释放头节点
 }
 
 template<class T>
-inline T& Link<T>::getElement(DWORD index)
+inline T* Link<T>::getElement(DWORD index)
 {
 	if (index >= m_dwSize)	//判断索引范围
 	{
 		return NULL;
 	}
 
-	Node* tempNode = m_node;
+	Node<T>* tempNode = m_node;
 	DWORD i = 0;
 	while (i < index)	//遍历index次,取第index个节点
 	{
 		tempNode = tempNode->nextAddr;
 		i++;
 	}
-	return tempNode->element;
+	return &tempNode->element;
 }
 
 template<class T>
 inline DWORD Link<T>::getElementIndex(T& t)
 {
-	Node* tempNode = m_node.nextAddr;
+	Node<T>* tempNode = m_node->nextAddr;
 	DWORD i = 0;
 	while(tempNode != m_node)
 	{
@@ -156,7 +162,7 @@ inline DWORD Link<T>::getElementIndex(T& t)
 template<class T>
 inline DWORD Link<T>::insert(T& t)
 {
-	return insert(0,t);
+	return insert(m_dwSize,t);
 }
 
 template<class T>
@@ -169,7 +175,7 @@ inline DWORD Link<T>::insert(DWORD index, T& t)
 	{
 		return INDEX_ERROR;
 	}
-	if (index = 0 )
+	else if (index == 0 )
 	{
 		if (m_dwSize == 1) {
 			node->prevAddr = m_node;
@@ -185,7 +191,7 @@ inline DWORD Link<T>::insert(DWORD index, T& t)
 		}
 		m_node = node;
 	}
-	if else(index == 1 && m_dwSize == 1) {
+	else if(index == 1 && m_dwSize == 1) {
 		node->prevAddr = m_node;
 		node->nextAddr = m_node;
 		m_node->prevAddr = node;
@@ -194,7 +200,7 @@ inline DWORD Link<T>::insert(DWORD index, T& t)
 	else {
 		while (i < index)
 		{
-			tempNode = tempNode.nextAddr;
+			tempNode = tempNode->nextAddr;
 			i++;
 		}
 		node->prevAddr = tempNode->prevAddr;
@@ -209,20 +215,27 @@ inline DWORD Link<T>::insert(DWORD index, T& t)
 template<class T>
 inline DWORD Link<T>::erase(DWORD index)
 {
-	if (index >= m_dwSize)
+	if (index >= m_dwSize)		//判断索引范围
 	{
 		return INDEX_ERROR;
 	}
 
 	Node<T>* tempNode = m_node;
 	DWORD i = 0;
-	while (i < index)
+	while (i < index)		//获取指定索引位置的节点
 	{
 		tempNode = tempNode->nextAddr;
+		i++;
 	}
-	tempNode->prevAddr->nextAddr = tempNode->nextAddr;
+	tempNode->prevAddr->nextAddr = tempNode->nextAddr;		//调整指定索引位置的节点的上下节点的指向
 	tempNode->nextAddr->prevAddr = tempNode->prevAddr;
-	delete tempNode;
+
+	if (index == 0)		//判断删除的是否是头节点
+	{
+		m_node = m_node->nextAddr;	
+	}
+	delete tempNode;	//释放指定节点
+	m_dwSize--;			//节点个数减一
 	return SUCCESS;
 }
 
@@ -235,6 +248,10 @@ inline DWORD Link<T>::size()
 template<class T>
 inline ostream& Link<T>::show()
 {
+	if (m_dwSize == 0)
+	{
+		return cout;
+	}
 	Node<T>* tempNode = m_node->nextAddr;
 	cout << "{";
 	cout << (*m_node).element;
