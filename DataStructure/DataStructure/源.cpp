@@ -2,6 +2,7 @@
 #include "vector.hpp"
 #include "Link.hpp"
 #include "Person.h"
+#include "TestTree.hpp"
 
 Person p;
 Person p1(p);
@@ -59,7 +60,17 @@ void linkTest() {
 
 	delete link;
 }
+
+void treeTest() {
+	BSortTree<Monster>* tree = new BSortTree<Monster>;
+	//tree->InOrderTraverse(tree->GetRoot());
+	//tree->PreOrderTraverse(tree->GetRoot());
+	tree->PostOrderTraverse(tree->GetRoot());
+
+}
+
 int main() {
 	
-	linkTest();
+	//linkTest();
+	treeTest();
 }
