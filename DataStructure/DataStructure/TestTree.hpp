@@ -53,6 +53,7 @@ public:
 	int GetDepth(TreeNode<T>* pNode);					//返回某个节点的高度/深度			
 private:
 	void Init();
+	void clear(TreeNode<T>* pNode);
 private:
 	TreeNode<T>* m_pRoot;					//根结点指针			
 	int size;					//树中元素总个数			
@@ -66,8 +67,9 @@ BSortTree<T>::BSortTree()
 template<class T>
 BSortTree<T>::~BSortTree() {
 
-	//释放所以节点空间								
-
+	//释放所有节点空间								
+	clear(m_pRoot);			//利用后续遍历释放节点内存
+	size = 0;
 }
 
 template<class T>
@@ -81,6 +83,7 @@ void BSortTree<T>::Init()
 	Monster m5(5, 5, (char*)"火龙");
 	Monster m6(6, 6, (char*)"独角兽");
 	Monster m7(7, 7, (char*)"江湖大盗");
+	Monster m8(8, 8, (char*)"绿林好汉");
 
 
 	TreeNode<Monster>* n1 = new TreeNode<Monster>(m1);
@@ -90,15 +93,17 @@ void BSortTree<T>::Init()
 	TreeNode<Monster>* n5 = new TreeNode<Monster>(m5);
 	TreeNode<Monster>* n6 = new TreeNode<Monster>(m6);
 	TreeNode<Monster>* n7 = new TreeNode<Monster>(m7);
+	TreeNode<Monster>* n8 = new TreeNode<Monster>(m8);
 
 	m_pRoot = n5;
 	n5->pLeft = n4;
 	n5->pRight = n6;
 	n4->pLeft = n1;
 	n1->pRight = n2;
+	n1->pLeft = n8;
 	n6->pLeft = n3;
 	n3->pRight = n7;
-	size = 7;
+	size = 8;
 	/*
 					5
 
@@ -106,9 +111,26 @@ void BSortTree<T>::Init()
 
 			1		 3
 
-				 2		 7
+		8		 2		 7
 
 	*/
+}
+template<class T>
+inline void BSortTree<T>::clear(TreeNode<T>* pNode)
+{
+	if (pNode == NULL)
+	{
+		return;
+	}
+	if (pNode->pLeft)
+	{
+		clear(pNode->pLeft);
+	}
+	if (pNode->pRight)
+	{
+		clear(pNode->pRight);
+	}
+	delete pNode;
 }
 template<class T>
 TreeNode<T>* BSortTree<T>::GetRoot()
@@ -166,7 +188,13 @@ void BSortTree<T>::PostOrderTraverse(TreeNode<T>* pNode)
 	{
 		return;
 	}
-	PostOrderTraverse(pNode->pLeft);
+
+	if (pNode->pLeft)
+	{
+		PostOrderTraverse(pNode->pLeft);
+	}
+	if (pNode->pRight) {
+		PostOrderTraverse(pNode->pRight);
+	}
 	cout << pNode->element << endl;
-	PostOrderTraverse(pNode->pRight);
 }

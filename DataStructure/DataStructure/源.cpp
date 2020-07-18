@@ -66,7 +66,7 @@ void treeTest() {
 	//tree->InOrderTraverse(tree->GetRoot());
 	//tree->PreOrderTraverse(tree->GetRoot());
 	tree->PostOrderTraverse(tree->GetRoot());
-
+	delete tree;
 }
 
 int main() {
